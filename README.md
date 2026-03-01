@@ -8,7 +8,7 @@ Spring Boot starter providing MCP tools for file system operations with built-in
 <dependency>
     <groupId>io.github.massimilianopili</groupId>
     <artifactId>mcp-filesystem-tools</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
