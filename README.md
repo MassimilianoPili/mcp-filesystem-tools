@@ -19,7 +19,9 @@ Requires Java 21+ and Spring AI 1.0.0+.
 | Tool | Description |
 |------|-------------|
 | `fs_list` | List files and directories at a given path |
-| `fs_read` | Read file contents (max 100KB) |
+| `fs_read` | Read file contents with line numbering and pagination (offset/limit, default 50 lines) |
+| `fs_grep` | Search for text/regex patterns in files within a directory (max 50 matches) |
+| `fs_write` | Write (create/overwrite) text files with auto-directory creation (max 500KB) |
 | `fs_search` | Search files by name pattern (max 10 levels, 100 results) |
 
 ## Configuration
