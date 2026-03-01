@@ -8,11 +8,11 @@ Spring Boot starter providing MCP tools for file system operations with built-in
 <dependency>
     <groupId>io.github.massimilianopili</groupId>
     <artifactId>mcp-filesystem-tools</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
-Requires Java 17+ and Spring AI 1.0.0+.
+Requires Java 21+ and Spring AI 1.0.0+.
 
 ## Tools
 
@@ -34,12 +34,12 @@ All paths are resolved relative to `MCP_FS_BASEDIR`. Path traversal (`../`) is b
 ## How It Works
 
 - Uses `@Tool` (Spring AI) for synchronous MCP tool methods
-- Always active (no conditional activation)
+- Activated by `mcp.filesystem.enabled=true` (default: true, `matchIfMissing`)
 - Path security enforced: all operations sandboxed within `MCP_FS_BASEDIR`
 
 ## Requirements
 
-- Java 17+
+- Java 21+
 - Spring Boot 3.4+
 - Spring AI 1.0.0+
 
