@@ -16,13 +16,13 @@ public class FileSystemTools {
 
     private final Path baseDir;
 
-    public FileSystemTools(@Value("${mcp.fs.basedir:C:/NoCloud}") String basedir) {
+    public FileSystemTools(@Value("${mcp.fs.basedir:/data}") String basedir) {
         this.baseDir = Path.of(basedir);
     }
 
-    @Tool(name = "fs_list", description = "Elenca file e cartelle in una directory. Il percorso e' relativo alla directory base configurata (default: C:/NoCloud).")
+    @Tool(name = "fs_list", description = "Lists files and directories in a directory. Path is relative to the configured base directory.")
     public List<FileInfo> listFiles(
-            @ToolParam(description = "Percorso relativo della directory, es: Progetti/Vari") String relativePath) {
+            @ToolParam(description = "Relative directory path, e.g. Projects/Misc") String relativePath) {
         Path dir = resolveAndValidate(relativePath);
         if (!Files.isDirectory(dir)) {
             throw new IllegalArgumentException("Il percorso non e' una directory: " + relativePath);
@@ -39,14 +39,14 @@ public class FileSystemTools {
         }
     }
 
-    @Tool(name = "fs_read", description = "Legge il contenuto di un file di testo con numerazione righe. "
-            + "IMPORTANTE: legge solo 50 righe alla volta (default). Per file grandi, usa offset per continuare. "
-            + "Per cercare contenuti specifici, preferisci fs_grep che e' piu' efficiente. "
+    @Tool(name = "fs_read", description = "Reads the content of a text file with line numbering. "
+            + "IMPORTANT: reads only 50 lines at a time (default). For large files, use offset to continue. "
+            + "To search for specific content, prefer fs_grep which is more efficient. "
             + "Output: '<line_number>| <content>'.")
     public String readFile(
-            @ToolParam(description = "Percorso relativo del file, es: cps4/index.html") String relativePath,
-            @ToolParam(description = "Riga di partenza (0-based). Default: 0.", required = false) Integer offset,
-            @ToolParam(description = "Numero di righe da leggere (max 2000). Default: 50.", required = false) Integer limit) {
+            @ToolParam(description = "Relative file path, e.g. cps4/index.html") String relativePath,
+            @ToolParam(description = "Start line (0-based). Default: 0.", required = false) Integer offset,
+            @ToolParam(description = "Number of lines to read (max 2000). Default: 50.", required = false) Integer limit) {
         Path file = resolveAndValidate(relativePath);
         if (Files.isDirectory(file)) {
             throw new IllegalArgumentException("Il percorso e' una directory, non un file");
@@ -77,12 +77,12 @@ public class FileSystemTools {
         }
     }
 
-    @Tool(name = "fs_grep", description = "Cerca un pattern (testo o regex) nei file di una directory. "
-            + "Restituisce le righe corrispondenti con numero di riga e contesto. Massimo 50 match.")
+    @Tool(name = "fs_grep", description = "Searches for a pattern (text or regex) in files within a directory. "
+            + "Returns matching lines with line numbers and context. Max 50 matches.")
     public String grepFiles(
-            @ToolParam(description = "Percorso relativo della directory di partenza") String relativePath,
-            @ToolParam(description = "Pattern di ricerca (testo semplice o regex Java)") String pattern,
-            @ToolParam(description = "Pattern glob per filtrare i file, es: *.html, *.css. Default: * (tutti)", required = false) String glob) {
+            @ToolParam(description = "Relative path of the starting directory") String relativePath,
+            @ToolParam(description = "Search pattern (plain text or Java regex)") String pattern,
+            @ToolParam(description = "Glob pattern to filter files, e.g. *.html, *.css. Default: * (all)", required = false) String glob) {
         Path dir = resolveAndValidate(relativePath);
         if (!Files.isDirectory(dir)) {
             throw new IllegalArgumentException("Il percorso non e' una directory: " + relativePath);
@@ -125,10 +125,10 @@ public class FileSystemTools {
         return String.format("[%d match trovati]\n%s", results.size(), String.join("\n", results));
     }
 
-    @Tool(name = "fs_write", description = "Scrive (crea o sovrascrive) un file di testo. Il percorso e' relativo alla directory base. Le directory intermedie vengono create automaticamente. Massimo 500KB di contenuto.")
+    @Tool(name = "fs_write", description = "Writes (creates or overwrites) a text file. Path is relative to the base directory. Intermediate directories are created automatically. Max 500KB content.")
     public String writeFile(
-            @ToolParam(description = "Percorso relativo del file da scrivere, es: cps4/index.html") String relativePath,
-            @ToolParam(description = "Contenuto completo del file da scrivere") String content) {
+            @ToolParam(description = "Relative file path to write, e.g. cps4/index.html") String relativePath,
+            @ToolParam(description = "Full file content to write") String content) {
         Path file = resolveAndValidate(relativePath);
         if (content.length() > 500_000) {
             throw new IllegalArgumentException("Contenuto troppo grande: " + content.length() + " caratteri (max 500000)");
@@ -145,10 +145,10 @@ public class FileSystemTools {
         }
     }
 
-    @Tool(name = "fs_search", description = "Cerca file per nome (glob pattern) in una directory, ricorsivamente fino a 10 livelli di profondita'. Massimo 100 risultati.")
+    @Tool(name = "fs_search", description = "Searches for files by name (glob pattern) in a directory, recursively up to 10 levels deep. Max 100 results.")
     public List<String> searchFiles(
-            @ToolParam(description = "Percorso relativo della directory di partenza") String relativePath,
-            @ToolParam(description = "Pattern glob, es: *.java, *.xml, pom*") String globPattern) {
+            @ToolParam(description = "Relative path of the starting directory") String relativePath,
+            @ToolParam(description = "Glob pattern, e.g. *.java, *.xml, pom*") String globPattern) {
         Path dir = resolveAndValidate(relativePath);
         if (!Files.isDirectory(dir)) {
             throw new IllegalArgumentException("Il percorso non e' una directory: " + relativePath);
